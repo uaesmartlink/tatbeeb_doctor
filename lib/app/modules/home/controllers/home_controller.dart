@@ -8,6 +8,7 @@ import 'package:hallo_doctor_doctor_app/app/services/timeslot_service.dart';
 import 'package:hallo_doctor_doctor_app/app/services/user_service.dart';
 import 'package:hallo_doctor_doctor_app/app/utils/constants.dart';
 import 'package:synchronized/synchronized.dart';
+import '../../dashboard/controllers/dashboard_controller.dart';
 
 class HomeController extends GetxController with StateMixin<DashboardModel> {
   //TODO: Implement HomeController
@@ -47,6 +48,11 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
     bool? check = GetStorage().read(checkDoctorDetail);
     if (check == null || !check) return false;
     return true;
+  }
+  void toProfile() {
+    Get.find<DashboardController>().selectedIndex = 3;
+    Get.toNamed('/profile');
+
   }
 
   getListAppointment() async {

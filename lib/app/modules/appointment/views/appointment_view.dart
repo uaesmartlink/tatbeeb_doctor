@@ -18,7 +18,7 @@ class AppointmentView extends GetView<AppointmentController> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BackgroundContainer(
-          text:'Appointment'.tr,
+          text:'Calender'.tr,
           isArrowBack: 0,
           widget: SingleChildScrollView(
             child: Column(

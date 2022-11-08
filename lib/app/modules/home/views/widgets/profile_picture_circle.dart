@@ -5,5 +5,6 @@ Widget profilePictureCircle(String imageUrl) {
     backgroundImage: imageUrl.isEmpty
         ? AssetImage('assets/images/default-profile.png')
         : NetworkImage(imageUrl) as ImageProvider,
+
   );
 }

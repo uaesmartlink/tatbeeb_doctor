@@ -10,7 +10,7 @@ import 'package:hallo_doctor_doctor_app/app/services/user_service.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
-  static const List<String> langage = ['English', 'Arabic'];
+  static const List<String> langage = ['English', 'Arabic', 'English & Arabic'];
   var dropDownLangage = langage.map((e) {
     return DropdownMenuItem(
       value: e,

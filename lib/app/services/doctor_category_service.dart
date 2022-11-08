@@ -14,7 +14,6 @@ class DoctorCategoryService {
         _instance!.collection('DoctorCategory');
 
     QuerySnapshot snapshot = await doctorCategory.get();
-
     final allData = snapshot.docs.map((doc) {
       var data = doc.data() as Map<String, dynamic>;
       data['categoryId'] = doc.reference.id;
@@ -23,7 +22,7 @@ class DoctorCategoryService {
 
     for (var category in allData) {
       DoctorCategory doc = DoctorCategory.fromJson(category);
-      _doctorCategory.add(doc);
+      if (doc.categoryName != "All Doctors") _doctorCategory.add(doc);
     }
 
     return _doctorCategory;

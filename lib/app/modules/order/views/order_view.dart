@@ -10,7 +10,7 @@ class OrderView extends GetView<OrderController> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BackgroundContainer(
-          text: 'Appointment'.tr,
+          text: 'Appointments'.tr,
           isArrowBack: 0,
           isPadding: 0,
           widget: controller.obx(
@@ -59,7 +59,7 @@ class OrderView extends GetView<OrderController> {
                 );
               },
             ),
-            onEmpty: Center(child: EmptyList(msg: 'no order'.tr)),
+            onEmpty: Center(child: EmptyList(msg: 'No Appointments Yet!'.tr)),
           ),
         ));
   }
