@@ -6,11 +6,23 @@ import 'package:hallo_doctor_doctor_app/app/modules/add_doctor_detail/views/page
 import 'package:hallo_doctor_doctor_app/app/modules/add_doctor_detail/views/widgets/display_image.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/login/views/widgets/submit_button.dart';
 import '../controllers/add_doctor_detail_controller.dart';
+import 'package:hallo_doctor_doctor_app/app/services/user_service.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
+  static const List<String> langage = ['English', 'Arabic'];
+  var dropDownLangage = langage.map((e) {
+    return DropdownMenuItem(
+      value: e,
+      child: Text(e),
+    );
+  }).toList();
+
   @override
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
+    var username = UserService().currentUser!.displayName;
+    controller.doctorName.value = username!;
     return Scaffold(
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(30, 51, 30, 20),
@@ -32,33 +44,6 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                     node.nextFocus();
                   },
                   validator: ((value) {
-                    if (value!.length < 3) {
-                      return 'Name must be more than two characters'.tr;
-                    } else {
-                      return null;
-                    }
-                  }),
-                  initialValue: controller.doctor == null
-                      ? ''
-                      : controller.doctorName.value,
-                  onSaved: (name) {
-                    controller.doctorName.value = name!;
-                  },
-                  decoration: InputDecoration(
-                      hintText: controller.doctor == null
-                          ? 'Doctor Name e.g : Dr. Maria Alexandra'.tr
-                          : '',
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2),
-                          borderRadius: BorderRadius.all(Radius.circular(10)))),
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  textInputAction: TextInputAction.next,
-                  onEditingComplete: () {
-                    node.nextFocus();
-                  },
-                  validator: ((value) {
                     if (value!.length < 7) {
                       return 'phone must be valid'.tr;
                     } else {
@@ -72,32 +57,29 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                     controller.doctorPhone.value = phone!;
                   },
                   decoration: InputDecoration(
-                      hintText: controller.doctor == null
-                          ? 'phone'.tr
-                          : '',
+                      hintText: controller.doctor == null ? 'phone'.tr : '',
                       border: OutlineInputBorder(
                           borderSide: BorderSide(width: 2),
                           borderRadius: BorderRadius.all(Radius.circular(10)))),
                 ),
                 SizedBox(height: 20),
-                TextFormField(
-                  textInputAction: TextInputAction.next,
-                  onEditingComplete: () {
-                    node.nextFocus();
-                  },
-                  initialValue: controller.doctor == null
-                      ? null
-                      : controller.doctorHospital.value,
-                  onSaved: (hospital) {
-                    controller.doctorHospital.value = hospital!;
-                  },
+                FormBuilderDropdown(
+                  initialValue: controller.doctorHospital,
+                  name: 'doctorHospital',
+                  items: dropDownLangage,
                   decoration: InputDecoration(
-                      hintText: controller.doctor == null
-                          ? 'Languages eg :ar,en,fr'.tr
-                          : null,
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2),
-                          borderRadius: BorderRadius.all(Radius.circular(10)))),
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          )),
+                      fillColor: Colors.grey[200],
+                      filled: true
+                  ),
+                  onChanged: (langage) {
+                    controller.doctorHospital = langage.toString();
+                  },
                 ),
                 SizedBox(height: 20),
                 TextFormField(
@@ -122,24 +104,29 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                 ),
                 SizedBox(height: 10),
                 TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    backgroundColor: Color(0xFFF5F6F9),
-                  ),
-                  onPressed: () async{
-                    FilePickerResult? result = await FilePicker.platform.pickFiles();
-                    if (result != null) {
-                      File? file=File(result.files.single.path!);
-                      controller.uploadCertificate(file);
-                       controller.name.value=result.files.single.name;
-                    } else {
-                      return;
-                    }
-                  },
-                    child: Obx(()=> Text(controller.name.value==''?'Add certificate':controller.name.value))
-                ),
+                    style: TextButton.styleFrom(
+                      primary: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      backgroundColor: Color(0xFFF5F6F9),
+                    ),
+                    onPressed: () async {
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: ['pdf'],
+                          );
+                      if (result != null) {
+                        File? file = File(result.files.single.path!);
+                        controller.uploadCertificate(file);
+                        controller.name.value = result.files.single.name;
+                      } else {
+                        return;
+                      }
+                    },
+                    child: Obx(() => Text(controller.name.value == ''
+                        ? 'Add certificate'
+                        : controller.name.value))),
                 SizedBox(height: 10),
                 TextButton(
                   style: TextButton.styleFrom(
