@@ -32,6 +32,10 @@ class AppointmentController extends GetxController
   void onClose() {}
 
   initDoctorSchedule() {
+    selectedDay = DateTime.now().obs;
+    focusDay = DateTime.now().obs;
+    calendarFormat = CalendarFormat.month;
+    updateEventList(selectedDay.value);
     TimeSlotService().getDoctorTimeSlot().then(
       (value) {
         groupedEvents = groupEvent(value);

@@ -126,4 +126,5 @@ class AddDoctorDetailController extends GetxController
       }
     }
   }
+
 }

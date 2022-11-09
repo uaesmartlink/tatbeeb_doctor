@@ -51,8 +51,6 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
   }
   void toProfile() {
     Get.find<DashboardController>().selectedIndex = 3;
-    Get.toNamed('/profile');
-
   }
 
   getListAppointment() async {

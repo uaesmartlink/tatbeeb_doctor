@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class DisplayImage extends StatelessWidget {
   final String imagePath;
   final VoidCallback onPressed;
+
   const DisplayImage(
       {Key? key, required this.imagePath, required this.onPressed})
       : super(key: key);
@@ -16,8 +17,8 @@ class DisplayImage extends StatelessWidget {
           buildImage(color),
           Positioned(
             child: buildEditIcon(color),
-            right: 4,
-            top: 10,
+            right: 0,
+            top: 0,
           )
         ],
       ),
@@ -29,7 +30,6 @@ class DisplayImage extends StatelessWidget {
     final image = imagePath.isNotEmpty
         ? NetworkImage(imagePath)
         : AssetImage('assets/images/default-profile.png');
-
     return CircleAvatar(
       radius: 75,
       backgroundColor: color,
@@ -58,9 +58,10 @@ class DisplayImage extends StatelessWidget {
     required double all,
   }) =>
       ClipOval(
-          child: Container(
-        padding: EdgeInsets.all(all),
-        color: Colors.white,
-        child: child,
-      ));
+        child: Container(
+          padding: EdgeInsets.all(all),
+          color: Colors.white,
+          child: child,
+        ),
+      );
 }

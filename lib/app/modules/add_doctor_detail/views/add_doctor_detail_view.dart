@@ -75,8 +75,7 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                             style: BorderStyle.none,
                           )),
                       fillColor: Colors.grey[200],
-                      filled: true
-                  ),
+                      filled: true),
                   onChanged: (langage) {
                     controller.doctorHospital = langage.toString();
                   },
@@ -113,9 +112,9 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                     onPressed: () async {
                       FilePickerResult? result =
                           await FilePicker.platform.pickFiles(
-                            type: FileType.custom,
-                            allowedExtensions: ['pdf'],
-                          );
+                        type: FileType.custom,
+                        allowedExtensions: ['pdf'],
+                      );
                       if (result != null) {
                         File? file = File(result.files.single.path!);
                         controller.uploadCertificate(file);
