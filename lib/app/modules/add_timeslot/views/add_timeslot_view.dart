@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+
 //import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:hallo_doctor_doctor_app/app/models/repeat_duration_model.dart';
@@ -12,7 +13,12 @@ import 'package:intl/intl.dart';
 class AddTimeslotView extends GetView<AddTimeslotController> {
   @override
   Widget build(BuildContext context) {
-    List<int> durationList = [15, 30, 45, 60,];
+    List<int> durationList = [
+      15,
+      30,
+      45,
+      60,
+    ];
     var dropdownDuration = durationList
         .map(
           (e) => DropdownMenuItem(
@@ -87,13 +93,20 @@ class AddTimeslotView extends GetView<AddTimeslotController> {
             child: Column(
               children: [
                 FormBuilderDateTimePicker(
-                  name: 'timeslot',
+                  name: 'timeSlot',
                   inputType: InputType.time,
-                  initialValue: controller.date,
+                  initialValue: controller.from_timeSlot,
                   format: DateFormat('hh:mm a'),
                   alwaysUse24HourFormat: false,
                   onChanged: (value) {
-                    controller.newDateTime = DateTime(
+                    controller.from_timeSlot = DateTime(
+                            controller.date.year,
+                            controller.date.month,
+                            controller.date.day,
+                            value!.hour,
+                            value.minute)
+                        .toLocal();
+                    controller.to_timeSlot = DateTime(
                             controller.date.year,
                             controller.date.month,
                             controller.date.day,
@@ -102,53 +115,45 @@ class AddTimeslotView extends GetView<AddTimeslotController> {
                         .toLocal();
                   },
                   decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.access_time),
-                  ),
-                ),
-                /*Divider(),
-                FormBuilderTextField(
-                  name: 'Price',
-                  initialValue: (controller.price ?? '').toString(),
-                  decoration: InputDecoration(
-                      hintText: 'Price'.tr,
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.attach_money)),
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(context),
-                    FormBuilderValidators.numeric(context),
-                    FormBuilderValidators.max(context, 100),
-                  ]),
-                  onSaved: (price) {
-                    controller.price = int.parse(price!);
-                  },
-                ),*/
-                Divider(),
-                FormBuilderDropdown(
-                  initialValue: controller.duration.toString(),
-                  name: 'Duration',
-                  items: dropdownDuration,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.timer),
-                  ),
-                  onChanged: (duration) {
-                    controller.duration = int.parse(duration.toString());
-                  },
+                      prefixIcon: Icon(Icons.access_time),
+                      labelText: "From: "),
                 ),
                 Divider(),
                 FormBuilderDateTimePicker(
-                  name: 'Date',
-                  inputType: InputType.date,
-                  initialValue: controller.date,
-                  format: DateFormat('EEEE, dd MMMM, y'),
-                  onChanged: (dateTime) {
-                    controller.date = dateTime!;
+                  name: 'to_timeSlot',
+                  inputType: InputType.time,
+                  initialValue: controller.to_timeSlot,
+                  format: DateFormat('hh:mm a'),
+                  alwaysUse24HourFormat: false,
+                  onChanged: (value) {
+                    controller.to_timeSlot = DateTime(
+                            controller.date.year,
+                            controller.date.month,
+                            controller.date.day,
+                            value!.hour,
+                            value.minute)
+                        .toLocal();
                   },
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      prefixIcon: Icon(Icons.date_range_outlined)),
+                      prefixIcon: Icon(Icons.access_time),
+                      labelText: "To: "),
                 ),
+                Divider(),
+                if (controller.editedTimeSlot == null)
+                  FormBuilderDateTimePicker(
+                    name: 'Date',
+                    inputType: InputType.date,
+                    initialValue: controller.date,
+                    format: DateFormat('EEEE, dd MMMM, y'),
+                    onChanged: (dateTime) {
+                      controller.date = dateTime!;
+                    },
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.date_range_outlined)),
+                  ),
                 Divider(),
                 GetBuilder<AddTimeslotController>(
                   builder: (_) {
@@ -179,25 +184,52 @@ class AddTimeslotView extends GetView<AddTimeslotController> {
                   },
                 ),
                 Divider(),
-                Obx(() => Visibility(
-                      visible: controller.repeatDurationVisibility.value,
-                      child: DropdownSearch<RepeatDuration>(
-                        mode: Mode.MENU,
-                        items: listRepeatDuration,
-                        itemAsString: (repeatDuration) {
-                          return repeatDuration!.monthText;
-                        },
-                        onChanged: print,
-                        selectedItem: controller.repeatDuration,
-                        dropdownSearchDecoration: InputDecoration(
-                            border: InputBorder.none,
-                            prefixIcon: Icon(Icons.date_range_outlined),
-                            label: Text('Repeat for how long')),
-                        onSaved: (RepeatDuration? repeatDuration) {
-                          controller.repeatDuration = repeatDuration!;
-                        },
-                      ),
-                    )),
+                Obx(
+                  () => Visibility(
+                    visible: controller.repeatDurationVisibility.value,
+                    child: DropdownSearch<RepeatDuration>(
+                      mode: Mode.MENU,
+                      items: listRepeatDuration,
+                      itemAsString: (repeatDuration) {
+                        return repeatDuration!.monthText;
+                      },
+                      onChanged: print,
+                      selectedItem: controller.repeatDuration,
+                      dropdownSearchDecoration: InputDecoration(
+                          border: InputBorder.none,
+                          prefixIcon: Icon(Icons.date_range_outlined),
+                          label: Text('Repeat for how long')),
+                      onSaved: (RepeatDuration? repeatDuration) {
+                        controller.repeatDuration = repeatDuration!;
+                      },
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Note:",
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "When you click on the " +
+                        " button, will be added the time period in which you are available, and the duration is divided into time slots of 15 minutes each.",
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
               ],
             ),
           ),

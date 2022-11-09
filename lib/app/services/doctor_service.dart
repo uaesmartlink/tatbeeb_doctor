@@ -57,13 +57,11 @@ class DoctorService {
       }
 
       var doctorId = await UserService().getDoctorId();
-      print('doctor id : ' + doctorId);
       var doctorReference = await FirebaseFirestore.instance
           .collection('Doctors')
           .doc(doctorId)
           .get();
       if (!doctorReference.exists) return null;
-      print('data doctor : ' + doctorReference.data().toString());
       var data = doctorReference.data() as Map<String, dynamic>;
       data['doctorId'] = doctorId;
       Doctor doctor = Doctor.fromJson(data);

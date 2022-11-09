@@ -18,7 +18,7 @@ class AppointmentView extends GetView<AppointmentController> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BackgroundContainer(
-          text:'Calender'.tr,
+          text: 'Calender'.tr,
           isArrowBack: 0,
           widget: SingleChildScrollView(
             child: Column(
@@ -46,7 +46,6 @@ class AppointmentView extends GetView<AppointmentController> {
                         onDaySelected: (selectedDay, focusedDay) {
                           controller.selectedDay.value = selectedDay;
                           controller.focusDay.value = focusedDay;
-                          print('focus day :' + focusedDay.toString());
                           controller.updateEventList(selectedDay);
                         },
                         onFormatChanged: (format) {
@@ -86,61 +85,60 @@ class AppointmentView extends GetView<AppointmentController> {
                     ),
                   ),
                 ),
-                GetBuilder<AppointmentController>(
-                  builder: (_) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: _.eventSelectedDay.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          color: _.eventSelectedDay[index].available == true
-                              ? Colors.white
-                              : Colors.green[300],
-                          child: ListTile(
-                            title: _.eventSelectedDay[index].available == true
-                                ? Text(
-                                    "Time Slot at ".tr +
-                                        DateFormat("hh:mm a").format(
-                                            _.eventSelectedDay[index].timeSlot!),
-                                  )
-                                : Text(
-                                    "Time Slot at ".tr +
-                                        DateFormat("hh:mm a").format(
-                                            _.eventSelectedDay[index].timeSlot!) +
-                                        ' has been Ordered'.tr,
-                                  ),
-                            subtitle: Text(
-                              DateFormat("EEEE, dd MMMM, yyyy")
-                                  .format(_.eventSelectedDay[index].timeSlot!),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 170),
+                  child: GetBuilder<AppointmentController>(
+                    builder: (_) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _.eventSelectedDay.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            color: _.eventSelectedDay[index].available == true
+                                ? Colors.white
+                                : Colors.green[300],
+                            child: ListTile(
+                              title: _.eventSelectedDay[index].available == true
+                                  ? Text(
+                                      "Time Slot at ".tr +
+                                          DateFormat("hh:mm a").format(_
+                                              .eventSelectedDay[index]
+                                              .timeSlot!),
+                                    )
+                                  : Text(
+                                      "Time Slot at ".tr +
+                                          DateFormat("hh:mm a").format(_
+                                              .eventSelectedDay[index]
+                                              .timeSlot!) +
+                                          ' has been Appointment'.tr,
+                                    ),
+                              subtitle: Text(
+                                DateFormat("EEEE, dd MMMM, yyyy").format(
+                                    _.eventSelectedDay[index].timeSlot!),
+                              ),
+                              trailing: _.eventSelectedDay[index].available ==
+                                      true
+                                  ? IconButton(
+                                      onPressed: () =>
+                                          controller.deleteOneTimeSlot(
+                                              _.eventSelectedDay[index]),
+                                      icon: Icon(Icons.delete))
+                                  : IconButton(
+                                      icon: Icon(
+                                          Icons.check_circle_outline_outlined),
+                                      onPressed: () {
+                                        controller.dashboardController
+                                            .selectedIndex = 2;
+                                      },
+                                    ),
                             ),
-                            trailing: _.eventSelectedDay[index].available == true
-                                ? IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: () {
-                                      Get.toNamed('/add-timeslot', arguments: [
-                                        {
-                                          'timeSlot': _.eventSelectedDay[index],
-                                          'date':
-                                              _.eventSelectedDay[index].timeSlot
-                                        }
-                                      ]);
-                                    },
-                                  )
-                                : IconButton(
-                                    icon:
-                                        Icon(Icons.check_circle_outline_outlined),
-                                    onPressed: () {
-                                      controller
-                                          .dashboardController.selectedIndex = 2;
-                                    },
-                                  ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                )
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),

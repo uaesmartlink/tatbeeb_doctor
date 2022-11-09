@@ -6,6 +6,7 @@ import 'package:hallo_doctor_doctor_app/app/models/timeslot_model.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/dashboard/controllers/dashboard_controller.dart';
 import 'package:hallo_doctor_doctor_app/app/services/timeslot_service.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AppointmentController extends GetxController
     with StateMixin<LinkedHashMap<DateTime, List<TimeSlot>>> {
@@ -72,5 +73,30 @@ class AppointmentController extends GetxController
       updateEventList(selectedDay.value);
       change(groupedEvents, status: RxStatus.success());
     });
+  }
+
+  Future deleteOneTimeSlot(TimeSlot timeslot) async {
+    bool? result = await Get.defaultDialog(
+        title: 'Delete Linked TimeSlot'.tr,
+        middleText:
+            'This timeslot is connected to several timeslots that were previously created simultaneously, do you also want to delete all timeslots that are connected to this timeslot'
+                .tr,
+        radius: 15,
+        textCancel: 'Cancel'.tr,
+        textConfirm: 'Delete'.tr,
+        onConfirm: () {
+          Get.back(result: true);
+        },
+        onCancel: () {
+          Get.back(result: false);
+        });
+
+    if (result == true) {
+      TimeSlotService().deleteTimeSlot(timeslot!).then((value) {
+        Fluttertoast.showToast(msg: 'Success delete timeslot'.tr);
+        updateEventsCalendar();
+        Get.back(closeOverlays: true);
+      });
+    }
   }
 }

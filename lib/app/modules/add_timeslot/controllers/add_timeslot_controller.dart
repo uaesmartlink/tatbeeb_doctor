@@ -9,15 +9,18 @@ import 'package:hallo_doctor_doctor_app/app/modules/appointment/controllers/appo
 import 'package:hallo_doctor_doctor_app/app/services/doctor_service.dart';
 import 'package:hallo_doctor_doctor_app/app/services/timeslot_service.dart';
 import 'package:jiffy/jiffy.dart';
+import 'dart:convert';
 
 import '../../../utils/number_format.dart';
 
 class AddTimeslotController extends GetxController {
   late TimeOfDay timeSlot;
   DateTime date = Get.arguments[0]['date'].toLocal();
+  late DateTime from_timeSlot;
+  late DateTime to_timeSlot;
   late DateTime newDateTime;
   TimeSlot? editedTimeSlot = Get.arguments[0]['timeSlot'];
-  double? price=0.0;
+  double? price = 0.0;
   int? duration = 15;
   bool available = true;
   final formKey = GlobalKey<FormBuilderState>();
@@ -39,11 +42,26 @@ class AddTimeslotController extends GetxController {
       price = editedTimeSlot!.price;
       duration = editedTimeSlot!.duration;
       timeSlot = TimeOfDay.fromDateTime(editedTimeSlot!.timeSlot!);
+      from_timeSlot = DateTime(
+          date.year, date.month, date.day, timeSlot.hour, timeSlot.minute);
+      to_timeSlot = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          (from_timeSlot.hour * 60 + 15) ~/ 60,
+          (from_timeSlot.minute + 15) % 60);
       isRepeatedTimeslot =
           editedTimeSlot!.parentTimeslotId != null ? true : false;
       update();
     } else {
       newDateTime = date;
+      from_timeSlot = date;
+      to_timeSlot = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          (from_timeSlot.hour * 60 + 15) ~/ 60,
+          (from_timeSlot.minute + 15) % 60);
       timeSlot = TimeOfDay.fromDateTime(date);
     }
   }
@@ -54,20 +72,71 @@ class AddTimeslotController extends GetxController {
   void addTimeslot() async {
     try {
       DateTime formattedDateTime =
-      DateTime(newDateTime.year, newDateTime.month, newDateTime.day, 24);
+          DateTime(newDateTime.year, newDateTime.month, newDateTime.day, 24);
       if (formattedDateTime.compareTo(DateTime.now()) < 0) {
         Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
+        return;
+      }
+
+      DateTime formattedDateTimeFrom = DateTime(
+          from_timeSlot.year,
+          from_timeSlot.month,
+          from_timeSlot.day,
+          from_timeSlot.hour,
+          from_timeSlot.minute);
+      if (formattedDateTimeFrom.compareTo(DateTime.now()) < 0) {
+        Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
+        return;
+      }
+
+      DateTime formattedDateTimeTo = DateTime(
+          to_timeSlot.year,
+          to_timeSlot.month,
+          to_timeSlot.day,
+          to_timeSlot.hour,
+          to_timeSlot.minute);
+      if (formattedDateTimeTo.compareTo(formattedDateTimeFrom) < 0) {
+        Fluttertoast.showToast(msg: 'time \'To\' is before time \'From\''.tr);
         return;
       }
       final validationSuccess = formKey.currentState!.validate();
       if (validationSuccess) {
         formKey.currentState!.save();
         if (repeat.repeat != Repeat.NOT_REPEAT) {
-          var timeslotUploadId = await addOneTimeSlot(isParent: true);
-          List<DateTime> listRepeatTimeslot = _generateRepeatTimeslot(repeat, repeatDuration);
-          await addRepeatTimeSlot(listRepeatTimeslot, timeslotUploadId);
+          var startHour = (from_timeSlot.hour * 60) ?? 0;
+          int start = startHour + from_timeSlot.minute ?? 0;
+
+          int endHour = (to_timeSlot.hour * 60) ?? 0;
+          int end = endHour + to_timeSlot.minute ?? 0;
+          for (int t = start; t < end; t += 15) {
+            newDateTime = DateTime(
+              newDateTime.year,
+              newDateTime.month,
+              newDateTime.day,
+              t ~/ 60,
+              t % 60,
+            );
+            var timeslotUploadId = await addOneTimeSlot(isParent: true);
+            List<DateTime> listRepeatTimeslot =
+                _generateRepeatTimeslot(repeat, repeatDuration);
+            await addRepeatTimeSlot(listRepeatTimeslot, timeslotUploadId);
+          }
         } else {
-          await addOneTimeSlot();
+          var startHour = (from_timeSlot.hour * 60) ?? 0;
+          int start = startHour + from_timeSlot.minute ?? 0;
+
+          int endHour = (to_timeSlot.hour * 60) ?? 0;
+          int end = endHour + to_timeSlot.minute ?? 0;
+          for (int t = start; t < end; t += 15) {
+            newDateTime = DateTime(
+              newDateTime.year,
+              newDateTime.month,
+              newDateTime.day,
+              t ~/ 60,
+              t % 60,
+            );
+            await addOneTimeSlot();
+          }
         }
         Fluttertoast.showToast(msg: 'Success adding Timeslot'.tr);
         appointController.updateEventsCalendar();
@@ -84,6 +153,27 @@ class AddTimeslotController extends GetxController {
         DateTime(newDateTime.year, newDateTime.month, newDateTime.day, 24);
     if (formattedDateTime.compareTo(DateTime.now()) < 0) {
       Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
+      return;
+    }
+    DateTime formattedDateTimeFrom = DateTime(
+        from_timeSlot.year,
+        from_timeSlot.month,
+        from_timeSlot.day,
+        from_timeSlot.hour,
+        from_timeSlot.minute);
+    if (formattedDateTimeFrom.compareTo(DateTime.now()) < 0) {
+      Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
+      return;
+    }
+
+    DateTime formattedDateTimeTo = DateTime(
+        to_timeSlot.year,
+        to_timeSlot.month,
+        to_timeSlot.day,
+        to_timeSlot.hour,
+        to_timeSlot.minute);
+    if (formattedDateTimeTo.compareTo(formattedDateTimeFrom) < 0) {
+      Fluttertoast.showToast(msg: 'time \'To\' is before time \'From\''.tr);
       return;
     }
     final validationSuccess = formKey.currentState!.validate();
@@ -211,33 +301,37 @@ class AddTimeslotController extends GetxController {
     });
   }
 
-   calculatePrice(){
-   int doctorPrice= DoctorService.doctor!.doctorPrice!;
-   switch(duration){
-     case 15:{
-       price=NumberFormatted().formatNumber(doctorPrice/4);
-       break;
-     }
-     case 30:{
-        price=NumberFormatted().formatNumber(doctorPrice/2);
-        break;
-     }
-     case 45:{
-        return price=NumberFormatted().formatNumber(doctorPrice/3);
-     }
-     case 60:{
-         price=doctorPrice/1;
-         break;
-     }
-   }
+  calculatePrice() {
+    int doctorPrice = DoctorService.doctor!.doctorPrice!;
+    switch (duration) {
+      case 15:
+        {
+          price = NumberFormatted().formatNumber(doctorPrice / 4);
+          break;
+        }
+      case 30:
+        {
+          price = NumberFormatted().formatNumber(doctorPrice / 2);
+          break;
+        }
+      case 45:
+        {
+          return price = NumberFormatted().formatNumber(doctorPrice / 3);
+        }
+      case 60:
+        {
+          price = doctorPrice / 1;
+          break;
+        }
+    }
   }
 
   Future<String> addOneTimeSlot({bool isParent = false}) async {
-    calculatePrice();
+    //calculatePrice();
     String timeSlotId = await TimeSlotService().saveDoctorTimeslot(
         dateTime: newDateTime,
         price: price!,
-        duration: duration!,
+        duration: 15,
         available: available,
         isParentTimeslot: isParent);
     /*if (price! < DoctorService.doctor!.doctorPrice!) {
@@ -252,7 +346,7 @@ class AddTimeslotController extends GetxController {
     await TimeSlotService().saveMultipleTimeslot(
         dateTime: newDateTime,
         price: price!,
-        duration: duration!,
+        duration: 15,
         available: available,
         repeatTimeslot: listRepeatTimeslot,
         parentTimeslotId: parentTimeslotId);

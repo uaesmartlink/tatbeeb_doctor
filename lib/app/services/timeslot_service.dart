@@ -151,10 +151,12 @@ class TimeSlotService {
           .where('doctorId', isEqualTo: doctor!.doctorId)
           .get();
       if (documentRef.docs.isEmpty) return [];
+      int cnt = 0;
       List<TimeSlot> listTimeslot = documentRef.docs.map((doc) {
         var data = doc.data();
         data['timeSlotId'] = doc.reference.id;
         TimeSlot timeSlot = TimeSlot.fromJson(data);
+
         return timeSlot;
       }).toList();
       return listTimeslot;
@@ -162,19 +164,6 @@ class TimeSlotService {
       return Future.error(e.toString());
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   //get all timeslot that user, succesfully purchase
   Future<List<TimeSlot>> getOrderedTimeSlot({int? limit}) async {
