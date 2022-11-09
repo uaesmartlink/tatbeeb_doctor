@@ -101,7 +101,6 @@ class TimeSlotService {
             timeSlot.timeSlot!.millisecond,
             timeSlot.timeSlot!.microsecond);
         timeSlot.timeSlot = updatedHourTimeSlot;
-        print('timeslot hour : ' + timeSlot.timeSlot.toString());
         batch.update(item.reference, TimeSlot().toMap(timeSlot));
       }
       await batch.commit();
@@ -149,6 +148,8 @@ class TimeSlotService {
       var documentRef = await FirebaseFirestore.instance
           .collection('DoctorTimeslot')
           .where('doctorId', isEqualTo: doctor!.doctorId)
+          .where('timeSlot', isGreaterThanOrEqualTo: DateTime.now())
+          .orderBy("timeSlot")
           .get();
       if (documentRef.docs.isEmpty) return [];
       int cnt = 0;
@@ -156,7 +157,6 @@ class TimeSlotService {
         var data = doc.data();
         data['timeSlotId'] = doc.reference.id;
         TimeSlot timeSlot = TimeSlot.fromJson(data);
-
         return timeSlot;
       }).toList();
       return listTimeslot;
