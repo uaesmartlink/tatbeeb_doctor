@@ -47,15 +47,17 @@ class EditProfileView extends GetView<EditProfileController> {
                     controller.toChangePassword();
                   },
                 ),
-                Obx(() => EditProfileTile(
-                      title: 'Base Price'.tr,
-                      subtitle: currencySign +
-                          ' ' +
-                          controller.basePrice.value.toString(),
-                      onTap: () {
-                        controller.toChangeBasePrice();
-                      },
-                    )),
+                Obx(
+                  () => EditProfileTile(
+                    title: 'Base Price'.tr,
+                    subtitle: currencySign +
+                        ' ' +
+                        controller.basePrice.value.toString(),
+                    onTap: () {
+                      controller.toChangeBasePrice();
+                    },
+                  ),
+                ),
               ],
             ),
           ),

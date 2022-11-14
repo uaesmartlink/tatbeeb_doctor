@@ -20,7 +20,7 @@ class AddTimeslotController extends GetxController {
   late DateTime to_timeSlot;
   late DateTime newDateTime;
   TimeSlot? editedTimeSlot = Get.arguments[0]['timeSlot'];
-  double? price = 0.0;
+  double? price = DoctorService.doctor!.doctorPrice! / 15;
   int? duration = 15;
   bool available = true;
   final formKey = GlobalKey<FormBuilderState>();
@@ -71,6 +71,7 @@ class AddTimeslotController extends GetxController {
   void onClose() {}
 
   void addTimeslot() async {
+    calculatePrice();
     try {
       DateTime formattedDateTime =
           DateTime(newDateTime.year, newDateTime.month, newDateTime.day, 24);
@@ -120,14 +121,12 @@ class AddTimeslotController extends GetxController {
               t % 60,
             );
             var timeslotUploadId = await addOneTimeSlot(isParent: true);
-            print(timeslotUploadId);
             if (timeslotUploadId.isEmpty)
               ok = false;
             List<DateTime> listRepeatTimeslot =
                 _generateRepeatTimeslot(repeat, repeatDuration);
             timeslotUploadId =
                 await addRepeatTimeSlot(listRepeatTimeslot, timeslotUploadId);
-            print(timeslotUploadId);
             if (timeslotUploadId.isEmpty)
               ok = false;
           }
@@ -137,11 +136,6 @@ class AddTimeslotController extends GetxController {
 
           int endHour = (to_timeSlot.hour * 60) ?? 0;
           int end = (endHour + to_timeSlot.minute) ?? 0;
-          print("-----");
-
-          print(start);
-          print(end);
-            print("-----");
           for (int t = start; t < end; t += 15) {
             newDateTime = DateTime(
               newDateTime.year,
@@ -325,6 +319,7 @@ class AddTimeslotController extends GetxController {
 
   calculatePrice() {
     int doctorPrice = DoctorService.doctor!.doctorPrice!;
+
     switch (duration) {
       case 15:
         {
@@ -359,35 +354,32 @@ class AddTimeslotController extends GetxController {
       int startSlotMinute = slot.timeSlot!.minute;
       int start = startSlotHour * 60 + startSlotMinute;
       int end = startSlotHour * 60 + startSlotMinute + 15;
-      print(from ~/ 60);
-      print(from % 60);
-      print(to ~/ 60);
-      print(to % 60);
+
 
       if (from <= start && to >= start) {
         Fluttertoast.showToast(
-            msg: '1There is an intersection with another time'.tr);
+            msg: '1- There is an intersection with another time'.tr);
         return "";
       }
 
       if (from < end && to > end) {
         Fluttertoast.showToast(
-            msg: '2There is an intersection with another time'.tr);
+            msg: '2- There is an intersection with another time'.tr);
         return "";
       }
 
       if (from >= start && to <= end) {
         Fluttertoast.showToast(
-            msg: '3There is an intersection with another time'.tr);
+            msg: '3- There is an intersection with another time'.tr);
         return "";
       }
       if (from <= start && to >= end) {
         Fluttertoast.showToast(
-            msg: '4There is an intersection with another time'.tr);
+            msg: '4- There is an intersection with another time'.tr);
         return "";
       }
     }
-    //calculatePrice();
+    calculatePrice();
     String timeSlotId = await TimeSlotService().saveDoctorTimeslot(
         dateTime: newDateTime,
         price: price!,
@@ -413,34 +405,31 @@ class AddTimeslotController extends GetxController {
       int startSlotMinute = slot.timeSlot!.minute;
       int start = startSlotHour * 60 + startSlotMinute;
       int end = startSlotHour * 60 + startSlotMinute + 15;
-      print(from ~/ 60);
-      print(from % 60);
-      print(to ~/ 60);
-      print(to % 60);
 
       if (from <= start && to >= start) {
         Fluttertoast.showToast(
-            msg: '1There is an intersection with another time'.tr);
+            msg: '1- There is an intersection with another time'.tr);
         return "";
       }
 
       if (from < end && to > end) {
         Fluttertoast.showToast(
-            msg: '2There is an intersection with another time'.tr);
+            msg: '2- There is an intersection with another time'.tr);
         return "";
       }
 
       if (from >= start && to <= end) {
         Fluttertoast.showToast(
-            msg: '3There is an intersection with another time'.tr);
+            msg: '3- There is an intersection with another time'.tr);
         return "";
       }
       if (from <= start && to >= end) {
         Fluttertoast.showToast(
-            msg: '4There is an intersection with another time'.tr);
+            msg: '4- There is an intersection with another time'.tr);
         return "";
       }
     }
+    calculatePrice();
 
     await TimeSlotService().saveMultipleTimeslot(
         dateTime: newDateTime,

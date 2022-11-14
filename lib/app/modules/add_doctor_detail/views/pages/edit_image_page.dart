@@ -24,7 +24,7 @@ class EditImagePage extends GetView<AddDoctorDetailController> {
       imageFile = File(imageCropped.path);
       controller.update();
     };
-    final color = Color.fromRGBO(64, 105, 225, 1);
+    final color = Colors.grey;
 
     final oldImage = NetworkImage(controller.profilePicUrl.value);
     return Scaffold(
@@ -42,14 +42,25 @@ class EditImagePage extends GetView<AddDoctorDetailController> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
-            width: 330,
-            child: Text(
-              'Upload a photo of yourself '.tr,
-              style: TextStyle(
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
-              ),
+          Padding(
+            padding: EdgeInsets.only(top: 20, left: 40),
+            child: Row(
+              children: [
+                SizedBox(
+                  width:250,
+                  child: Text(
+                    'Upload your photo '.tr,
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                buildEditIcon(color, onPressed),
+              ],
             ),
           ),
           Padding(
@@ -57,14 +68,11 @@ class EditImagePage extends GetView<AddDoctorDetailController> {
             child: SizedBox(
               child: Container(
                 child: Center(
-                  child: Stack(children: [
-                    buildImage(color, oldImage),
-                    Positioned(
-                      child: buildEditIcon(color, onPressed),
-                      right: 0,
-                      top: 0,
-                    ),
-                  ]),
+                  child: Stack(
+                    children: [
+                      buildImage(color, oldImage),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -82,7 +90,7 @@ class EditImagePage extends GetView<AddDoctorDetailController> {
                     controller.updateProfilePic(imageFile!);
                   },
                   child: Text(
-                    'Update'.tr,
+                    'Confirm'.tr,
                     style: TextStyle(fontSize: 15),
                   ),
                 ),
@@ -95,26 +103,34 @@ class EditImagePage extends GetView<AddDoctorDetailController> {
   }
 
   Widget buildImage(Color color, NetworkImage image) {
-    return CircleAvatar(
+    /*  return CircleAvatar(
       radius: 75,
       backgroundColor: color,
       child: CircleAvatar(
         backgroundImage: image as ImageProvider,
         radius: 70,
       ),
+    );*/
+    return Container(
+      height: 330.0,
+      width: 330.0,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: image as ImageProvider,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
     );
   }
 
-  Widget buildEditIcon(Color color, VoidCallback onPressed) => buildCircle(
-      all: 0.5,
-      child: IconButton(
+  Widget buildEditIcon(Color color, VoidCallback onPressed) => IconButton(
         icon: Icon(
           Icons.edit,
         ),
-        iconSize: 20,
+        iconSize: 30,
         color: color,
         onPressed: onPressed,
-      ));
+      );
 
   // Builds/Makes Circle for Edit Icon on Profile Picture
   Widget buildCircle({
@@ -122,11 +138,12 @@ class EditImagePage extends GetView<AddDoctorDetailController> {
     required double all,
   }) =>
       ClipOval(
-          child: Container(
-        padding: EdgeInsets.all(all),
-        color: Colors.white,
-        child: child,
-      ));
+        child: Container(
+          padding: EdgeInsets.all(all),
+          color: Colors.white,
+          child: child,
+        ),
+      );
 }
 
 /*
