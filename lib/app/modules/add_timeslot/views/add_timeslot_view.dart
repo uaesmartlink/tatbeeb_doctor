@@ -90,9 +90,13 @@ class AddTimeslotView extends GetView<AddTimeslotController> {
                 FormBuilderDateTimePicker(
                   name: 'to_timeSlot',
                   inputType: InputType.time,
-                  initialValue: controller.to_timeSlot,
+                  initialValue: controller.from_timeSlot,
                   format: DateFormat('hh:mm a'),
                   alwaysUse24HourFormat: false,
+                  autocorrect: true,
+                  enableInteractiveSelection: true,
+                  timePickerInitialEntryMode: TimePickerEntryMode.input,
+                  autofocus: false,
                   onChanged: (value) {
                     controller.to_timeSlot = DateTime(
                         controller.date.year,
