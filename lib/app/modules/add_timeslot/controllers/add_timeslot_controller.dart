@@ -32,6 +32,7 @@ class AddTimeslotController extends GetxController {
   var repeatDurationVisibility = false.obs;
   var isRepeatedTimeslot = false;
   bool isEditMode = false;
+  List<TimeSlot> timeSlots = Get.arguments[0]['allTimeSlots'];
 
   @override
   void onInit() {
@@ -99,9 +100,11 @@ class AddTimeslotController extends GetxController {
         Fluttertoast.showToast(msg: 'time \'To\' is before time \'From\''.tr);
         return;
       }
+
       final validationSuccess = formKey.currentState!.validate();
       if (validationSuccess) {
         formKey.currentState!.save();
+        bool ok = true;
         if (repeat.repeat != Repeat.NOT_REPEAT) {
           var startHour = (from_timeSlot.hour * 60) ?? 0;
           int start = startHour + from_timeSlot.minute ?? 0;
@@ -117,16 +120,28 @@ class AddTimeslotController extends GetxController {
               t % 60,
             );
             var timeslotUploadId = await addOneTimeSlot(isParent: true);
+            print(timeslotUploadId);
+            if (timeslotUploadId.isEmpty)
+              ok = false;
             List<DateTime> listRepeatTimeslot =
                 _generateRepeatTimeslot(repeat, repeatDuration);
-            await addRepeatTimeSlot(listRepeatTimeslot, timeslotUploadId);
+            timeslotUploadId =
+                await addRepeatTimeSlot(listRepeatTimeslot, timeslotUploadId);
+            print(timeslotUploadId);
+            if (timeslotUploadId.isEmpty)
+              ok = false;
           }
         } else {
-          var startHour = (from_timeSlot.hour * 60) ?? 0;
-          int start = startHour + from_timeSlot.minute ?? 0;
+          int startHour = (from_timeSlot.hour * 60) ?? 0;
+          int start = (startHour + from_timeSlot.minute) ?? 0;
 
           int endHour = (to_timeSlot.hour * 60) ?? 0;
-          int end = endHour + to_timeSlot.minute ?? 0;
+          int end = (endHour + to_timeSlot.minute) ?? 0;
+          print("-----");
+
+          print(start);
+          print(end);
+            print("-----");
           for (int t = start; t < end; t += 15) {
             newDateTime = DateTime(
               newDateTime.year,
@@ -135,19 +150,29 @@ class AddTimeslotController extends GetxController {
               t ~/ 60,
               t % 60,
             );
-            await addOneTimeSlot();
+            var timeslotUploadId = await addOneTimeSlot(isParent: true);
+            if (timeslotUploadId == "")
+              ok = false;
           }
         }
-        Fluttertoast.showToast(msg: 'Success adding Timeslot'.tr);
-        appointController.updateEventsCalendar();
-        Get.back();
+        if (ok) {
+          Fluttertoast.showToast(msg: 'Success adding Timeslot'.tr);
+          appointController.updateEventsCalendar();
+          Get.back();
+        }
+        else{
+          Fluttertoast.showToast(
+              msg: '1There is an intersection with another time'.tr);
+        }
       }
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
 
-  void editTimeSlot() async {
+  void editTimeSlot() async
+
+  {
     calculatePrice();
     DateTime formattedDateTime =
         DateTime(newDateTime.year, newDateTime.month, newDateTime.day, 24);
@@ -166,16 +191,13 @@ class AddTimeslotController extends GetxController {
       return;
     }
 
-    DateTime formattedDateTimeTo = DateTime(
-        to_timeSlot.year,
-        to_timeSlot.month,
-        to_timeSlot.day,
-        to_timeSlot.hour,
-        to_timeSlot.minute);
+    DateTime formattedDateTimeTo = DateTime(to_timeSlot.year, to_timeSlot.month,
+        to_timeSlot.day, to_timeSlot.hour, to_timeSlot.minute);
     if (formattedDateTimeTo.compareTo(formattedDateTimeFrom) < 0) {
       Fluttertoast.showToast(msg: 'time \'To\' is before time \'From\''.tr);
       return;
     }
+
     final validationSuccess = formKey.currentState!.validate();
     if (validationSuccess) {
       formKey.currentState!.save();
@@ -327,6 +349,44 @@ class AddTimeslotController extends GetxController {
   }
 
   Future<String> addOneTimeSlot({bool isParent = false}) async {
+    int fromHour = newDateTime.hour;
+    int fromMinute = newDateTime.minute;
+    int from = fromHour * 60 + fromMinute;
+    int to = from + 15;
+
+    for (TimeSlot slot in timeSlots) {
+      int startSlotHour = slot.timeSlot!.hour;
+      int startSlotMinute = slot.timeSlot!.minute;
+      int start = startSlotHour * 60 + startSlotMinute;
+      int end = startSlotHour * 60 + startSlotMinute + 15;
+      print(from ~/ 60);
+      print(from % 60);
+      print(to ~/ 60);
+      print(to % 60);
+
+      if (from <= start && to >= start) {
+        Fluttertoast.showToast(
+            msg: '1There is an intersection with another time'.tr);
+        return "";
+      }
+
+      if (from < end && to > end) {
+        Fluttertoast.showToast(
+            msg: '2There is an intersection with another time'.tr);
+        return "";
+      }
+
+      if (from >= start && to <= end) {
+        Fluttertoast.showToast(
+            msg: '3There is an intersection with another time'.tr);
+        return "";
+      }
+      if (from <= start && to >= end) {
+        Fluttertoast.showToast(
+            msg: '4There is an intersection with another time'.tr);
+        return "";
+      }
+    }
     //calculatePrice();
     String timeSlotId = await TimeSlotService().saveDoctorTimeslot(
         dateTime: newDateTime,
@@ -343,6 +403,45 @@ class AddTimeslotController extends GetxController {
   addRepeatTimeSlot(
       List<DateTime> listRepeatTimeslot, String parentTimeslotId) async {
     calculatePrice();
+    int fromHour = newDateTime.hour;
+    int fromMinute = newDateTime.minute;
+    int from = fromHour * 60 + fromMinute;
+    int to = from + 15;
+
+    for (TimeSlot slot in timeSlots) {
+      int startSlotHour = slot.timeSlot!.hour;
+      int startSlotMinute = slot.timeSlot!.minute;
+      int start = startSlotHour * 60 + startSlotMinute;
+      int end = startSlotHour * 60 + startSlotMinute + 15;
+      print(from ~/ 60);
+      print(from % 60);
+      print(to ~/ 60);
+      print(to % 60);
+
+      if (from <= start && to >= start) {
+        Fluttertoast.showToast(
+            msg: '1There is an intersection with another time'.tr);
+        return "";
+      }
+
+      if (from < end && to > end) {
+        Fluttertoast.showToast(
+            msg: '2There is an intersection with another time'.tr);
+        return "";
+      }
+
+      if (from >= start && to <= end) {
+        Fluttertoast.showToast(
+            msg: '3There is an intersection with another time'.tr);
+        return "";
+      }
+      if (from <= start && to >= end) {
+        Fluttertoast.showToast(
+            msg: '4There is an intersection with another time'.tr);
+        return "";
+      }
+    }
+
     await TimeSlotService().saveMultipleTimeslot(
         dateTime: newDateTime,
         price: price!,

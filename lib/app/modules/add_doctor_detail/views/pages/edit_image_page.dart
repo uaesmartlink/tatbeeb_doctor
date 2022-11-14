@@ -70,23 +70,25 @@ class EditImagePage extends GetView<AddDoctorDetailController> {
             ),
           ),
           Padding(
-              padding: EdgeInsets.only(top: 40),
-              child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    width: 330,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (imageFile == null) return;
-                        controller.updateProfilePic(imageFile!);
-                      },
-                      child: Text(
-                        'Update'.tr,
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ),
-                  )))
+            padding: EdgeInsets.only(top: 40),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                width: 330,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (imageFile == null) return;
+                    controller.updateProfilePic(imageFile!);
+                  },
+                  child: Text(
+                    'Update'.tr,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

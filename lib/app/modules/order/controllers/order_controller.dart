@@ -18,6 +18,8 @@ class OrderController extends GetxController with StateMixin<List<TimeSlot>> {
         return;
       }
       change(value, status: RxStatus.success());
+      print(value);
+      print('------------');
     }).catchError((err) {
       change([], status: RxStatus.error());
     });

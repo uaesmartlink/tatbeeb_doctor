@@ -183,6 +183,7 @@ class TimeSlotService {
       List<TimeSlot> listTimeslot = documentSnapshot.docs.map((doc) {
         var data = doc.data();
         data['timeSlotId'] = doc.reference.id;
+        print(data);
         TimeSlot timeSlot = TimeSlot.fromJson(data);
         return timeSlot;
       }).toList();

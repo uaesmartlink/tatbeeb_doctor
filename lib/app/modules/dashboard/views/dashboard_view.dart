@@ -25,11 +25,16 @@ class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() => Center(
-            child: IndexedStack(
-                index: controller.selectedIndex, children: bodyContent),
-          )),
-      bottomNavigationBar: Obx(() => WillPopScope(
+      body: Obx(
+        () => Center(
+          child: IndexedStack(
+              index: controller.selectedIndex, children: bodyContent),
+        ),
+      ),
+      bottomNavigationBar: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Obx(
+          () => WillPopScope(
             child: BottomAppBar(
               child: Container(
                 margin: EdgeInsets.only(left: 12.0, right: 12.0),
@@ -99,8 +104,7 @@ class DashboardView extends GetView<DashboardController> {
               if (controller.selectedIndex > 0) {
                 updateTabSelection(0);
                 return false;
-              }
-              else {
+              } else {
                 DateTime now = DateTime.now();
                 if (currentBackPressTime == null ||
                     now.difference(currentBackPressTime!) >
@@ -118,7 +122,9 @@ class DashboardView extends GetView<DashboardController> {
               }
               return false;
             },
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

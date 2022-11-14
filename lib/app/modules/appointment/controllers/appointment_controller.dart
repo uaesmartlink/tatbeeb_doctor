@@ -16,7 +16,7 @@ class AppointmentController extends GetxController
   var selectedDay = DateTime.now().obs;
   var focusDay = DateTime.now().obs;
   var calendarFormat = CalendarFormat.month;
-
+  List<TimeSlot> timeSlots = [];
   LinkedHashMap<DateTime, List<TimeSlot>> groupedEvents =
       LinkedHashMap<DateTime, List<TimeSlot>>();
 
@@ -35,12 +35,13 @@ class AppointmentController extends GetxController
     selectedDay = DateTime.now().obs;
     focusDay = DateTime.now().obs;
     calendarFormat = CalendarFormat.month;
-    updateEventList(selectedDay.value);
     TimeSlotService().getDoctorTimeSlot().then(
       (value) {
         groupedEvents = groupEvent(value);
+
         change(groupedEvents, status: RxStatus.success());
         update();
+        updateEventList(selectedDay.value);
       },
     ).catchError((err) {
       change(groupedEvents, status: RxStatus.success());
@@ -69,6 +70,17 @@ class AppointmentController extends GetxController
   void updateEventList(DateTime date) {
     eventSelectedDay = getEventsfromDay(date);
     update();
+    timeSlots = [];
+    groupedEvents.forEach((key, value) {
+      if (key.year == selectedDay.value.year &&
+          key.month == selectedDay.value.month &&
+          key.day == selectedDay.value.day) {
+        print(key.day);
+        value.forEach((element) {
+          timeSlots.add(element);
+        });
+      }
+    });
   }
 
   void updateEventsCalendar() {

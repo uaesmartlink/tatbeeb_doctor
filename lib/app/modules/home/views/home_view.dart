@@ -27,7 +27,7 @@ class HomeView extends GetView<HomeController> {
             child: Padding(
               padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
               child: controller.obx(
-                (dahsboardData) => Column(
+                (dashboardModel) => Column(
                   children: [
                     SizedBox(
                       height: 20,
@@ -62,7 +62,7 @@ class HomeView extends GetView<HomeController> {
                               ),
                               Text(
                                 currencySign +
-                                    dahsboardData!.balance.toString(),
+                                    dashboardModel!.balance.toString(),
                                 style: GoogleFonts.inter(
                                     fontSize: 40, fontWeight: FontWeight.w400),
                               ),
@@ -111,16 +111,16 @@ class HomeView extends GetView<HomeController> {
                     ),
                     Container(
                         height: 200,
-                        child: dahsboardData.listAppointment!.isNotEmpty
+                        child: dashboardModel.listAppointment!.isNotEmpty
                             ? ListView.builder(
                                 itemCount:
-                                    dahsboardData.listAppointment!.length,
+                                    dashboardModel.listAppointment!.length,
                                 itemBuilder: (contex, index) => OrderTile(
-                                  imgUrl: dahsboardData.listAppointment![index]
+                                  imgUrl: dashboardModel.listAppointment![index]
                                       .bookByWho!.photoUrl!,
-                                  name: dahsboardData.listAppointment![index]
+                                  name: dashboardModel.listAppointment![index]
                                       .bookByWho!.displayName!,
-                                  dateOrder: dahsboardData
+                                  dateOrder: dashboardModel
                                       .listAppointment![index].purchaseTime!,
                                 ),
                               )

@@ -86,7 +86,7 @@ class AppointmentView extends GetView<AppointmentController> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 170),
+                  padding: const EdgeInsets.only(bottom: 300),
                   child: GetBuilder<AppointmentController>(
                     builder: (_) {
                       return ListView.builder(
@@ -146,7 +146,10 @@ class AppointmentView extends GetView<AppointmentController> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Get.toNamed('/add-timeslot', arguments: [
-              {'date': controller.selectedDay.value}
+              {
+                'date': controller.selectedDay.value,
+                'allTimeSlots': controller.timeSlots,
+              }
             ]);
           },
           label: Text('Add Timeslot'.tr),

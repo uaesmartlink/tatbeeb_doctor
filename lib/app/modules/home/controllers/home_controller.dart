@@ -58,6 +58,8 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
       dashboardModel.listAppointment =
           await TimeSlotService().getOrderedTimeSlot(limit: 5);
     } catch (err) {
+      print(err);
+      print('--------------');
       printError(info: err.toString());
     }
   }

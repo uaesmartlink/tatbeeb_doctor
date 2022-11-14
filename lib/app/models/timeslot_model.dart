@@ -46,27 +46,28 @@ class TimeSlot {
   List<DateTime>? repeatTimeSlot;
   String? parentTimeslotId;
 
-  factory TimeSlot.fromJson(Map<String, dynamic> jsonData) {
+  factory TimeSlot.fromJson(Map<String, dynamic> json) {
     return TimeSlot(
-        timeSlotId: jsonData[_timeSlotId],
-        timeSlot: (jsonData[_timeSlot] as Timestamp).toDate(),
-        pastTimeSlot: jsonData[_pastTimeSlot] != null
-            ? (jsonData[_pastTimeSlot] as Timestamp).toDate()
+        timeSlotId: json[_timeSlotId] as String?,
+        timeSlot: (json[_timeSlot] as Timestamp).toDate(),
+        pastTimeSlot: json[_pastTimeSlot] != null
+            ? (json[_pastTimeSlot] as Timestamp).toDate()
             : null,
-        duration: jsonData[_duration],
-        price: jsonData[_price],
-        bookedAmount: jsonData[_bookedAmount],
-        bookedDuration: jsonData[_bookedDuration],
-        available: jsonData[_available],
-        doctorid: jsonData[_doctorId],
-        bookByWho: jsonData[_bookByWho] != null
-            ? UserModel.fromJson(jsonData[_bookByWho])
+        duration: json[_duration] as int?,
+        price: double.parse(json[_price].toString()),
+        bookedAmount: json[_bookedAmount] != null ? double.parse(json['price'].toString()) : 0.0,
+        bookedDuration: json[_bookedDuration] as int?,
+        available: json[_available] as bool?,
+        doctorid: json[_doctorId] as String?,
+        bookByWho: json[_bookByWho] != null
+            ? UserModel.fromJson(json[_bookByWho] as Map<String, dynamic>)
             : null,
-        purchaseTime: jsonData[_purchaseTime] != null
-            ? (jsonData[_purchaseTime] as Timestamp).toDate()
+        purchaseTime: json[_purchaseTime] != null
+            ? (json[_purchaseTime] as Timestamp).toDate()
             : null,
-        status: jsonData[_status],
-        parentTimeslotId: jsonData[_parentTimeslotId]);
+        status: json[_status] as String?,
+        parentTimeslotId: json[_parentTimeslotId] as String,
+    );
   }
 
   Map<String, dynamic> toMap(TimeSlot timeSlot) {
