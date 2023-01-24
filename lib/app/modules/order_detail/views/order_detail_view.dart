@@ -27,7 +27,7 @@ class OrderDetailView extends GetView<OrderDetailController> {
           },
           icon: Icon(Icons.arrow_back_ios_rounded),
         ),
-        actions: [
+      /*  actions: [
           //list if widget in appbar actions
           PopupMenuButton(
             color: Colors.white,
@@ -73,7 +73,7 @@ class OrderDetailView extends GetView<OrderDetailController> {
                 }
             },
           ),
-        ],
+        ],*/
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 //import 'package:get_storage/get_storage.dart';
 import 'package:hallo_doctor_doctor_app/app/models/doctor_category.dart';
 import 'package:hallo_doctor_doctor_app/app/models/doctor_model.dart';
@@ -14,6 +15,7 @@ import 'package:hallo_doctor_doctor_app/app/services/user_service.dart';
 
 //import 'package:hallo_doctor_doctor_app/app/utils/constants.dart';
 import 'package:hallo_doctor_doctor_app/app/utils/exceptions.dart';
+
 
 class AddDoctorDetailController extends GetxController
     with StateMixin<List<DoctorCategory>> {
@@ -30,7 +32,7 @@ class AddDoctorDetailController extends GetxController
   Doctor? doctor = Get.arguments;
   var profilePicUrl = ''.obs;
   var certificateUrl = ''.obs;
-  var name = ''.obs;
+  var doctorCertificateUrl =''.obs;
   bool isEdit = false;
 
   @override
@@ -44,6 +46,8 @@ class AddDoctorDetailController extends GetxController
       doctorHospital = doctor!.doctorHospital!;
       shortBiography.value = doctor!.doctorShortBiography!;
       doctorCategory = doctor!.doctorCategory!;
+      doctorCertificateUrl.value = doctor!.certificateUrl!;
+      print(doctorCertificateUrl.value);
       update();
     }
   }
@@ -58,9 +62,11 @@ class AddDoctorDetailController extends GetxController
     UserService().updatePhoto(filePath).then((imgUrl) {
       profilePicUrl.value = imgUrl;
       Get.back();
+      EasyLoading.dismiss();
     }).catchError((error) {
       Fluttertoast.showToast(
           msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+      EasyLoading.dismiss();
     }).whenComplete(() {
       EasyLoading.dismiss();
     });
@@ -70,6 +76,7 @@ class AddDoctorDetailController extends GetxController
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     UserService().updatePhoto(filePath).then((certifUrl) {
       certificateUrl.value = certifUrl;
+      EasyLoading.dismiss();
       Get.back();
     }).catchError((error) {
       Fluttertoast.showToast(
@@ -79,8 +86,20 @@ class AddDoctorDetailController extends GetxController
     });
   }
 
-  void toEditProfilePic() {
-    Get.to(() => EditImagePage());
+  void toEditProfilePic() async {
+    final ImagePicker _picker = ImagePicker();
+    XFile? image;
+    File? imageFile;
+    image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+    imageFile = File(image!.path);
+    var imageCropped = await ImageCropper().cropImage(
+        sourcePath: image!.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        aspectRatioPresets: [CropAspectRatioPreset.square]);
+    if (imageCropped == null) return;
+    imageFile = File(imageCropped.path);
+    updateProfilePic(imageFile!);
   }
 
   void initDoctorCategory() {
@@ -90,19 +109,20 @@ class AddDoctorDetailController extends GetxController
   }
 
   void saveDoctorDetail() async {
-    /*
-    if (profilePicUrl.value.isEmpty) {
-      exceptionToast('Please choose your profile photo'.tr);
-      return;
-    }
-     */
-    if (certificateUrl.value.isEmpty) {
-      exceptionToast('Please choose your certificate'.tr);
-      return;
-    }
-    if (doctorCategory == null) {
-      exceptionToast('Please chose doctor Specialty or Category'.tr);
-      return;
+    if (doctor == null) {
+      if (profilePicUrl.value.isEmpty) {
+        exceptionToast('Please choose your profile photo'.tr);
+        return;
+      }
+
+      if (certificateUrl.value.isEmpty) {
+        exceptionToast('Please choose your certificate'.tr);
+        return;
+      }
+      if (doctorCategory == null) {
+        exceptionToast('Please chose doctor Specialty or Category'.tr);
+        return;
+      }
     }
     if (formkey.currentState!.validate() && doctorCategory != null) {
       formkey.currentState!.save();
@@ -118,13 +138,15 @@ class AddDoctorDetailController extends GetxController
             certificateUrl: certificateUrl.value,
             doctorCategory: doctorCategory!,
             isUpdate: isEdit);
-        Get.offNamed('/dashboard');
         EasyLoading.dismiss();
+        Get.offNamed('/dashboard');
+
       } catch (e) {
         Fluttertoast.showToast(msg: e.toString());
         EasyLoading.dismiss();
       }
     }
   }
-
 }
+
+

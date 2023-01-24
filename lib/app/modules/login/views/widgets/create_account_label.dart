@@ -14,7 +14,7 @@ Widget createAccountLabel(VoidCallback onTap) {
         children: <Widget>[
           Text(
             'Don\'t have an account ?'.tr,
-            style: TextStyle(color:Colors.white,fontSize: 13, fontWeight: FontWeight.w600),
+            style: TextStyle(color:Colors.white,fontSize: 18, fontWeight: FontWeight.w600),
           ),
           SizedBox(
             width: 10,
@@ -23,7 +23,7 @@ Widget createAccountLabel(VoidCallback onTap) {
             'Register'.tr,
             style: TextStyle(
                 color: Color(0xFF125a9a),
-                fontSize: 13,
+                fontSize: 18,
                 fontWeight: FontWeight.w600),
           ),
         ],

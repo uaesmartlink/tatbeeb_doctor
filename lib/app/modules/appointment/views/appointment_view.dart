@@ -86,6 +86,10 @@ class AppointmentView extends GetView<AppointmentController> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text("Expired appointments will not be shown"),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(bottom: 300),
                   child: GetBuilder<AppointmentController>(
                     builder: (_) {
@@ -111,6 +115,8 @@ class AppointmentView extends GetView<AppointmentController> {
                                           DateFormat("hh:mm a").format(_
                                               .eventSelectedDay[index]
                                               .timeSlot!) +
+                                          " to " +
+                                          "${_.eventSelectedDay[index].bookedDuration} minutes" +
                                           ' has been Appointment'.tr,
                                     ),
                               subtitle: Text(
@@ -128,8 +134,11 @@ class AppointmentView extends GetView<AppointmentController> {
                                       icon: Icon(
                                           Icons.check_circle_outline_outlined),
                                       onPressed: () {
-                                        controller.dashboardController
-                                            .selectedIndex = 2;
+                                        /*   controller.dashboardController
+                                            .selectedIndex = 2;*/
+                                        Get.toNamed('/order-detail',
+                                            arguments:
+                                                _.eventSelectedDay[index]);
                                       },
                                     ),
                             ),

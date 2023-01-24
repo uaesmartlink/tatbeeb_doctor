@@ -8,9 +8,11 @@ import 'package:hallo_doctor_doctor_app/app/modules/login/views/widgets/submit_b
 import '../controllers/add_doctor_detail_controller.dart';
 import 'package:hallo_doctor_doctor_app/app/services/user_service.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
   static const List<String> langage = ['English', 'Arabic', 'English & Arabic'];
+
   var dropDownLangage = langage.map((e) {
     return DropdownMenuItem(
       value: e,
@@ -27,7 +29,7 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(30, 51, 30, 20),
         child: Form(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.disabled,
           key: controller.formkey,
           child: GetX<AddDoctorDetailController>(
             builder: (controller) => Column(
@@ -38,7 +40,7 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                       controller.toEditProfilePic();
                     }),
                 SizedBox(height: 20),
-                TextFormField(
+                /*TextFormField(
                   textInputAction: TextInputAction.next,
                   onEditingComplete: () {
                     node.nextFocus();
@@ -61,6 +63,22 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                       border: OutlineInputBorder(
                           borderSide: BorderSide(width: 2),
                           borderRadius: BorderRadius.all(Radius.circular(10)))),
+                ),*/
+                IntlPhoneField(
+                  decoration: InputDecoration(
+                    labelText: 'Phone Number',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                  initialValue: controller.doctor == null
+                      ? ''
+                      : controller.doctorPhone.value,
+                  initialCountryCode: "AE",
+                  onSaved: (phone) {
+                    controller.doctorPhone.value =
+                        phone == null ? '' : phone.number;
+                  },
                 ),
                 SizedBox(height: 20),
                 FormBuilderDropdown(
@@ -103,29 +121,43 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                 ),
                 SizedBox(height: 10),
                 TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      backgroundColor: Color(0xFFF5F6F9),
+                  style: TextButton.styleFrom(
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    backgroundColor: Color(0xFFF5F6F9),
+                  ),
+                  onPressed: () async {
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf'],
+                    );
+                    if (result != null) {
+                      File? file = File(result.files.single.path!);
+                      controller.uploadCertificate(file);
+                      controller.certificateUrl.value =
+                          result.files.single.name;
+                    } else {
+                      return;
+                    }
+                  },
+                  child: Align(
+                    child: Obx(
+                      () => Text(
+                        controller.certificateUrl.value == ''
+                            ? 'Add certificate'
+                            : 'Added successfully, to edit the certificate click again',
+                        style: TextStyle(
+                          color: controller.certificateUrl.value == ''
+                              ? Colors.blue
+                              : Colors.green,
+                        ),
+                      ),
                     ),
-                    onPressed: () async {
-                      FilePickerResult? result =
-                          await FilePicker.platform.pickFiles(
-                        type: FileType.custom,
-                        allowedExtensions: ['pdf'],
-                      );
-                      if (result != null) {
-                        File? file = File(result.files.single.path!);
-                        controller.uploadCertificate(file);
-                        controller.name.value = result.files.single.name;
-                      } else {
-                        return;
-                      }
-                    },
-                    child: Obx(() => Text(controller.name.value == ''
-                        ? 'Add certificate'
-                        : controller.name.value))),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ),
                 SizedBox(height: 10),
                 TextButton(
                   style: TextButton.styleFrom(
@@ -142,9 +174,10 @@ class AddDoctorDetailView extends GetView<AddDoctorDetailController> {
                     children: [
                       SizedBox(width: 20),
                       Expanded(
-                          child: Text(controller.doctorCategory == null
-                              ? 'Chose Doctor Category'.tr
-                              : controller.doctorCategory!.categoryName!)),
+                        child: Text(controller.doctorCategory == null
+                            ? 'Chose Doctor Category'.tr
+                            : controller.doctorCategory!.categoryName!),
+                      ),
                       Icon(Icons.arrow_forward_ios),
                     ],
                   ),

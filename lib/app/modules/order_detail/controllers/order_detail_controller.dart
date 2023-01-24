@@ -22,12 +22,20 @@ class OrderDetailController extends GetxController {
     super.onInit();
     if (orderedTimeslot.status == 'refund') active.value = false;
     if (orderedTimeslot.pastTimeSlot != null) isReschedule = true;
+    print('---------------');
+    print(orderedTimeslot.price);
+    print(orderedTimeslot.bookedAmount);
+    print('---------------');
+
   }
 
   @override
   void onClose() {}
   void videoCall() async {
     //
+    print("AAAA");
+    print(orderedTimeslot.timeSlotId);
+    print("AAAA");
     try {
       EasyLoading.show(maskType: EasyLoadingMaskType.black);
 

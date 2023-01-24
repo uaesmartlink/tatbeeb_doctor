@@ -22,7 +22,7 @@ class EditImagePage extends GetView<AddDoctorDetailController> {
           aspectRatioPresets: [CropAspectRatioPreset.square]);
       if (imageCropped == null) return;
       imageFile = File(imageCropped.path);
-      controller.update();
+      controller.updateProfilePic(imageFile!);
     };
     final color = Colors.grey;
 

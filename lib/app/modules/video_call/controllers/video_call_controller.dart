@@ -1,4 +1,5 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hallo_doctor_doctor_app/app/models/timeslot_model.dart';
@@ -17,16 +18,17 @@ class VideoCallController extends GetxController {
   late RtcEngine engine;
   bool localAudioMute = false;
   bool localUserJoined = false;
+
   @override
   void onInit() {
     super.onInit();
     initAgora();
   }
 
+
   Future<void> initAgora() async {
     // retrieve permissions
     await [Permission.microphone, Permission.camera].request();
-
     //create the engine
     engine = await RtcEngine.create(Environment.agoraAppId);
     await engine.enableVideo();
@@ -48,6 +50,7 @@ class VideoCallController extends GetxController {
           endMeeting();
           update();
         },
+
       ),
     );
 

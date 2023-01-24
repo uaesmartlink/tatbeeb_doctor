@@ -11,9 +11,17 @@ import 'app/routes/app_pages.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'app/services/firebase_service.dart';
 import 'app/utils/localization.dart';
+import 'package:devicelocale/devicelocale.dart';
+import 'package:country_codes/country_codes.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await CountryCodes.init(); // Optionally, you may provide a `Locale` to get countrie's localizadName
+  CountryDetails details = CountryCodes.detailsForLocale();
+  Locale locale = CountryCodes.getDeviceLocale()!;
+  print(details.alpha2Code);
+  print(locale.languageCode);
+  print("XXXXXXXXXXXXXXXXXXXXXXXXXXxxx");
   await dotenv.load();
   await Firebase.initializeApp();
   FirebaseChatCore.instance
@@ -21,7 +29,7 @@ Future main() async {
   await GetStorage.init();
   //NotificationService().initNotification();
   bool isUserLogin = await FirebaseService().checkUserAlreadyLogin();
-  initializeDateFormatting('en', null);
+  initializeDateFormatting(locale.languageCode, details.alpha2Code);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);

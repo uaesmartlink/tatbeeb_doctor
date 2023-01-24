@@ -16,6 +16,8 @@ class LocalizationService extends Translations {
     Locale('ur', 'PK'),
     Locale('fr', null)
   ];
+
+
   @override
   // TODO: implement keys
   Map<String, Map<String, String>> get keys =>

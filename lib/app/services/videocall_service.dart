@@ -8,7 +8,8 @@ class VideoCallService {
   Future<String> getAgoraToken(String roomName) async {
     try {
       var callable = FirebaseFunctions.instance.httpsCallable('generateToken');
-      final results = await callable({'channelName': roomName, 'role': 'publisher'});
+      final results =
+          await callable({'channelName': roomName, 'role': 'publisher'});
       var clientSecret = results.data;
       print('token : ' + clientSecret);
       return clientSecret;
@@ -35,6 +36,22 @@ class VideoCallService {
           .collection('RoomVideoCall')
           .doc(roomId)
           .set(roomData);
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  Future<bool> isRoomExist(String roomId) async {
+    try {
+      var docRef = await FirebaseFirestore.instance
+          .collection('RoomVideoCall')
+          .where('roomId', isEqualTo: roomId)
+          .get();
+      if (docRef.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (e) {
       return Future.error(e.toString());
     }

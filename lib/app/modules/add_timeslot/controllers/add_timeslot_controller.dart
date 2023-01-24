@@ -9,6 +9,8 @@ import 'package:hallo_doctor_doctor_app/app/modules/appointment/controllers/appo
 import 'package:hallo_doctor_doctor_app/app/services/doctor_service.dart';
 import 'package:hallo_doctor_doctor_app/app/services/timeslot_service.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import 'dart:convert';
 
 import '../../../utils/number_format.dart';
@@ -71,14 +73,16 @@ class AddTimeslotController extends GetxController {
   void onClose() {}
 
   void addTimeslot() async {
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+
     calculatePrice();
     try {
       DateTime formattedDateTime =
           DateTime(newDateTime.year, newDateTime.month, newDateTime.day, 24);
-      if (formattedDateTime.compareTo(DateTime.now()) < 0) {
+     /* if (formattedDateTime.compareTo(DateTime.now()) < 0) {
         Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
         return;
-      }
+      }*/
 
       DateTime formattedDateTimeFrom = DateTime(
           from_timeSlot.year,
@@ -86,10 +90,10 @@ class AddTimeslotController extends GetxController {
           from_timeSlot.day,
           from_timeSlot.hour,
           from_timeSlot.minute);
-      if (formattedDateTimeFrom.compareTo(DateTime.now()) < 0) {
+     /* if (formattedDateTimeFrom.compareTo(DateTime.now()) < 0) {
         Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
         return;
-      }
+      }*/
 
       DateTime formattedDateTimeTo = DateTime(
           to_timeSlot.year,
@@ -99,6 +103,7 @@ class AddTimeslotController extends GetxController {
           to_timeSlot.minute);
       if (formattedDateTimeTo.compareTo(formattedDateTimeFrom) < 0) {
         Fluttertoast.showToast(msg: 'time \'To\' is before time \'From\''.tr);
+        EasyLoading.dismiss();
         return;
       }
 
@@ -121,14 +126,12 @@ class AddTimeslotController extends GetxController {
               t % 60,
             );
             var timeslotUploadId = await addOneTimeSlot(isParent: true);
-            if (timeslotUploadId.isEmpty)
-              ok = false;
+            if (timeslotUploadId.isEmpty) ok = false;
             List<DateTime> listRepeatTimeslot =
                 _generateRepeatTimeslot(repeat, repeatDuration);
             timeslotUploadId =
                 await addRepeatTimeSlot(listRepeatTimeslot, timeslotUploadId);
-            if (timeslotUploadId.isEmpty)
-              ok = false;
+            if (timeslotUploadId.isEmpty) ok = false;
           }
         } else {
           int startHour = (from_timeSlot.hour * 60) ?? 0;
@@ -145,16 +148,15 @@ class AddTimeslotController extends GetxController {
               t % 60,
             );
             var timeslotUploadId = await addOneTimeSlot(isParent: true);
-            if (timeslotUploadId == "")
-              ok = false;
+            if (timeslotUploadId == "") ok = false;
           }
         }
         if (ok) {
           Fluttertoast.showToast(msg: 'Success adding Timeslot'.tr);
           appointController.updateEventsCalendar();
           Get.back();
-        }
-        else{
+          EasyLoading.dismiss();
+        } else {
           Fluttertoast.showToast(
               msg: '1There is an intersection with another time'.tr);
         }
@@ -164,31 +166,30 @@ class AddTimeslotController extends GetxController {
     }
   }
 
-  void editTimeSlot() async
-
-  {
+  void editTimeSlot() async {
     calculatePrice();
     DateTime formattedDateTime =
         DateTime(newDateTime.year, newDateTime.month, newDateTime.day, 24);
-    if (formattedDateTime.compareTo(DateTime.now()) < 0) {
+   /* if (formattedDateTime.compareTo(DateTime.now()) < 0) {
       Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
       return;
-    }
+    }*/
     DateTime formattedDateTimeFrom = DateTime(
         from_timeSlot.year,
         from_timeSlot.month,
         from_timeSlot.day,
         from_timeSlot.hour,
         from_timeSlot.minute);
-    if (formattedDateTimeFrom.compareTo(DateTime.now()) < 0) {
-      Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
-      return;
-    }
+      /*if (formattedDateTimeFrom.compareTo(DateTime.now()) < 0) {
+        Fluttertoast.showToast(msg: 'Date Time is in the past'.tr);
+        return;
+      }*/
 
     DateTime formattedDateTimeTo = DateTime(to_timeSlot.year, to_timeSlot.month,
         to_timeSlot.day, to_timeSlot.hour, to_timeSlot.minute);
     if (formattedDateTimeTo.compareTo(formattedDateTimeFrom) < 0) {
       Fluttertoast.showToast(msg: 'time \'To\' is before time \'From\''.tr);
+      EasyLoading.dismiss();
       return;
     }
 
@@ -355,27 +356,30 @@ class AddTimeslotController extends GetxController {
       int start = startSlotHour * 60 + startSlotMinute;
       int end = startSlotHour * 60 + startSlotMinute + 15;
 
-
       if (from <= start && to >= start) {
         Fluttertoast.showToast(
             msg: '1- There is an intersection with another time'.tr);
+        EasyLoading.dismiss();
         return "";
       }
 
       if (from < end && to > end) {
         Fluttertoast.showToast(
             msg: '2- There is an intersection with another time'.tr);
+        EasyLoading.dismiss();
         return "";
       }
 
       if (from >= start && to <= end) {
         Fluttertoast.showToast(
             msg: '3- There is an intersection with another time'.tr);
+        EasyLoading.dismiss();
         return "";
       }
       if (from <= start && to >= end) {
         Fluttertoast.showToast(
             msg: '4- There is an intersection with another time'.tr);
+        EasyLoading.dismiss();
         return "";
       }
     }

@@ -41,7 +41,7 @@ class ChangePasswordPage extends GetView<EditProfileController> {
                           FormBuilderValidators.minLength(context, 3)
                         ]),
                         decoration:
-                            InputDecoration(labelText: 'Curren Password'.tr),
+                            InputDecoration(labelText: 'Current Password'.tr),
                         name: 'currentPassword',
                         keyboardType: TextInputType.visiblePassword,
                         onEditingComplete: () => node.nextFocus(),
@@ -64,6 +64,8 @@ class ChangePasswordPage extends GetView<EditProfileController> {
                         onSubmitted: (value) =>
                             controller.newPassword.value = value!,
                         onEditingComplete: () => node.nextFocus(),
+                        onChanged: (value) =>
+                            controller.newPassword.value = value!,
                       ),
                     ),
                     Padding(
