@@ -20,9 +20,8 @@ class DashboardController extends GetxController {
     super.onInit();
     EasyLoading.show();
     notificationService.listenNotification();
-    await UserService()
-        .updateUserToken(await notificationService.getNotificationToken());
-    EasyLoading.dismiss();
+    await UserService().updateUserToken(await notificationService.getNotificationToken());
+        EasyLoading.dismiss();
   }
 
   @override

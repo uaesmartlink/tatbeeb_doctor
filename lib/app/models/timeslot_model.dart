@@ -31,6 +31,7 @@ class TimeSlot {
   static const String _repeatTimeSlot = 'repeatTimeSlot';
   static const String _parentTimeslotId = 'parentTimeslotId';
 
+  String? id;
   String? timeSlotId;
   DateTime? timeSlot;
   DateTime? pastTimeSlot;
@@ -69,6 +70,8 @@ class TimeSlot {
         parentTimeslotId: json[_parentTimeslotId] as String,
     );
   }
+  factory TimeSlot.fromFirestore(DocumentSnapshot doc) =>
+      TimeSlot.fromJson(doc.data()! as Map<String, dynamic>)..id = doc.id;
 
   Map<String, dynamic> toMap(TimeSlot timeSlot) {
     if (timeSlot.timeSlot == null) {

@@ -361,6 +361,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  custom_flutter_callkit_incoming:
+    dependency: "direct main"
+    description:
+      name: custom_flutter_callkit_incoming
+      sha256: bc0d90663e8967ff5640b62584c980a6406239ea0950698f7800c34d71282195
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.3"
   dart_style:
     dependency: transitive
     description:

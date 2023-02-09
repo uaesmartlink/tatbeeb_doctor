@@ -72,6 +72,7 @@ dependencies:
   cloud_functions: ^4.0.7
   firebase_auth: ^4.1.0
   get_storage: ^2.0.3
+  custom_flutter_callkit_incoming: ^1.2.3
   devicelocale: ^0.5.5
   country_codes: ^2.2.0
   date_count_down: ^2.1.0
