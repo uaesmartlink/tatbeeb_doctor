@@ -1,4 +1,4 @@
-/*import 'dart:io';
+import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -38,11 +38,11 @@ class ChatController extends GetxController {
     types.PreviewData previewData,
   ) {
     final index = messages.indexWhere((element) => element.id == message.id);
-    final updatedMessage = messages[index].copyWith(previewData: previewData);
+  /*  final updatedMessage = messages[index].copyWith(previewData: previewData);
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       messages[index] = updatedMessage;
-    });
+    });*/
   }
 
   void handleSendPressed(types.PartialText message) {
@@ -128,4 +128,3 @@ class ChatController extends GetxController {
     }
   }
 }
-*/

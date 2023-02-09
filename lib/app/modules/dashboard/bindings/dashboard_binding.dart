@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/appointment/controllers/appointment_controller.dart';
-//import 'package:hallo_doctor_doctor_app/app/modules/chat/controllers/chat_controller.dart';
+import 'package:hallo_doctor_doctor_app/app/modules/chat/controllers/chat_controller.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/home/controllers/home_controller.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/order/controllers/order_controller.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/profile/controllers/profile_controller.dart';

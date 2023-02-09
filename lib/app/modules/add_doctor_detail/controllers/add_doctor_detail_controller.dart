@@ -110,7 +110,7 @@ class AddDoctorDetailController extends GetxController
 
   void saveDoctorDetail() async {
     if (doctor == null) {
-      if (profilePicUrl.value.isEmpty) {
+    /*  if (profilePicUrl.value.isEmpty) {
         exceptionToast('Please choose your profile photo'.tr);
         return;
       }
@@ -118,7 +118,8 @@ class AddDoctorDetailController extends GetxController
       if (certificateUrl.value.isEmpty) {
         exceptionToast('Please choose your certificate'.tr);
         return;
-      }
+      }*/
+
       if (doctorCategory == null) {
         exceptionToast('Please chose doctor Specialty or Category'.tr);
         return;

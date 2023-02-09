@@ -8,8 +8,8 @@ import 'package:hallo_doctor_doctor_app/app/modules/appointment/bindings/appoint
 import 'package:hallo_doctor_doctor_app/app/modules/appointment/views/appointment_view.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/balance/bindings/balance_binding.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/balance/views/balance_view.dart';
-//import 'package:hallo_doctor_doctor_app/app/modules/chat/bindings/chat_binding.dart';
-//import 'package:hallo_doctor_doctor_app/app/modules/chat/views/chat_view.dart';
+import 'package:hallo_doctor_doctor_app/app/modules/chat/bindings/chat_binding.dart';
+import 'package:hallo_doctor_doctor_app/app/modules/chat/views/chat_view.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/dashboard/bindings/dashboard_binding.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:hallo_doctor_doctor_app/app/modules/edit_profile/bindings/edit_profile_binding.dart';
@@ -133,15 +133,15 @@ class AppPages {
       page: () => ForgotPasswordView(),
       binding: ForgotPasswordBinding(),
     ),
-    /*GetPage(
+    GetPage(
       name: _Paths.CHAT,
       page: () => ChatView(),
       binding: ChatBinding(),
-    ),*/
-    /*GetPage(
+    ),
+    GetPage(
       name: _Paths.LIST_CHAT,
       page: () => ListChatView(),
       binding: ListChatBinding(),
-    ),*/
+    ),
   ];
 }

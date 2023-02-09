@@ -84,4 +84,17 @@ class DoctorService {
       return Future.error(e.toString());
     }
   }
+
+  Future updateDoctorStatus(bool isOnline) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('Doctors')
+          .doc(doctor!.doctorId)
+          .update({'isOnline': isOnline});
+      doctor!.isOnline = isOnline;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
 }

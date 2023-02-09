@@ -33,7 +33,7 @@ class AddPaypalPage extends GetView<WithdrawMethodController> {
                   name: 'name',
                   validator: FormBuilderValidators.compose(
                     [
-                      FormBuilderValidators.minLength(context, 2),
+                      FormBuilderValidators.minLength(2),
                     ],
                   ),
                   decoration: InputDecoration(
@@ -49,7 +49,7 @@ class AddPaypalPage extends GetView<WithdrawMethodController> {
                   name: 'email',
                   validator: FormBuilderValidators.compose(
                     [
-                      FormBuilderValidators.email(context),
+                      FormBuilderValidators.email(),
                     ],
                   ),
                   decoration: InputDecoration(

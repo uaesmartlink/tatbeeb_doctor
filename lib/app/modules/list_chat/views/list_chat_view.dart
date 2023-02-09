@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:get/get.dart';
@@ -109,6 +108,5 @@ class ListChatView extends GetView<ListChatController> {
   }
 
   String getUserName(types.User user) =>
-      '${user.displayName ?? ''} ${user.lastName ?? ''}'.trim();
+      '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim();
 }
-*/

@@ -1,4 +1,3 @@
-/*
 import 'package:get/get.dart';
 
 class ListChatController extends GetxController {
@@ -19,4 +18,3 @@ class ListChatController extends GetxController {
   void onClose() {}
   void increment() => count.value++;
 }
- */

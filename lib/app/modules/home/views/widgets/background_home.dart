@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hallo_doctor_doctor_app/app/modules/home/views/widgets/switch.dart';
+import '../../controllers/home_controller.dart';
 
 class BackgroundHome extends StatelessWidget{
 
   final Widget widget1;
   final Widget widget2;
   final String text;
-  const BackgroundHome({Key? key,required this.widget1,required this.widget2,required this.text}) : super(key: key);
+  final HomeController controller;
+
+  const BackgroundHome({Key? key,required this.widget1,required this.widget2,required this.text, required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +56,10 @@ class BackgroundHome extends StatelessWidget{
                       ),
                     ],
                   ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  SwitchExample(controller),
                   widget1
                 ],
               ),

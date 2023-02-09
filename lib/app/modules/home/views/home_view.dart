@@ -16,120 +16,120 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
         body: Obx(
       () => BackgroundHome(
-          text: controller.username.value,
-          widget1: InkWell(
-            onTap: () {
-              controller.toProfile();
-            },
-            child: profilePictureCircle(controller.profilePic.value),
-          ),
-          widget2: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
-              child: controller.obx(
-                (dashboardModel) => Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
+        text: controller.username.value,
+        widget1: InkWell(
+          onTap: () {
+            controller.toProfile();
+          },
+          child: profilePictureCircle(controller.profilePic.value),
+        ),
+        widget2: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+            child: controller.obx(
+              (dashboardModel) => Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 150,
+                    padding: EdgeInsets.only(top: 20, bottom: 20),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0x10000000),
+                            blurRadius: 10,
+                            spreadRadius: 4,
+                            offset: Offset(0.0, 8.0))
+                      ],
                     ),
-                    Container(
-                      height: 150,
-                      padding: EdgeInsets.only(top: 20, bottom: 20),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color(0x10000000),
-                              blurRadius: 10,
-                              spreadRadius: 4,
-                              offset: Offset(0.0, 8.0))
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                'Current Balance'.tr,
-                                style: GoogleFonts.inter(
-                                    fontSize: 15, fontWeight: FontWeight.w400),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                currencySign +
-                                    dashboardModel!.balance.toString(),
-                                style: GoogleFonts.inter(
-                                    fontSize: 40, fontWeight: FontWeight.w400),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                          VerticalDivider(),
-                          Column(
-                            children: [
-                              Text(
-                                'Appointment made'.tr,
-                                style: GoogleFonts.inter(
-                                    fontSize: 15, fontWeight: FontWeight.w400),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                '0',
-                                style: GoogleFonts.inter(
-                                    fontSize: 40, fontWeight: FontWeight.w500),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                'this month'.tr,
-                                style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: Styles.greyTextColor),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              'Current Balance'.tr,
+                              style: GoogleFonts.inter(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              currencySign + dashboardModel!.balance.toString(),
+                              style: GoogleFonts.inter(
+                                  fontSize: 40, fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                        VerticalDivider(),
+                        Column(
+                          children: [
+                            Text(
+                              'Appointment made'.tr,
+                              style: GoogleFonts.inter(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '0',
+                              style: GoogleFonts.inter(
+                                  fontSize: 40, fontWeight: FontWeight.w500),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'this month'.tr,
+                              style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Styles.greyTextColor),
+                            )
+                          ],
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    SectionTitle(
-                      title: 'Upcoming Appointment'.tr,
-                      subTitle: 'See More'.tr,
-                    ),
-                    Container(
-                        height: 200,
-                        child: dashboardModel.listAppointment!.isNotEmpty
-                            ? ListView.builder(
-                                itemCount:
-                                    dashboardModel.listAppointment!.length,
-                                itemBuilder: (contex, index) => OrderTile(
-                                  imgUrl: dashboardModel.listAppointment![index]
-                                      .bookByWho!.photoUrl!,
-                                  name: dashboardModel.listAppointment![index]
-                                      .bookByWho!.displayName!,
-                                  dateOrder: dashboardModel
-                                      .listAppointment![index].purchaseTime!,
-                                ),
-                              )
-                            : EmptyList(msg: 'no appoitment'.tr)),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  SectionTitle(
+                    title: 'Upcoming Appointment'.tr,
+                    subTitle: 'See More'.tr,
+                  ),
+                  Container(
+                      height: 200,
+                      child: dashboardModel.listAppointment!.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: dashboardModel.listAppointment!.length,
+                              itemBuilder: (contex, index) => OrderTile(
+                                imgUrl: dashboardModel.listAppointment![index]
+                                    .bookByWho!.photoUrl!,
+                                name: dashboardModel.listAppointment![index]
+                                    .bookByWho!.displayName!,
+                                dateOrder: dashboardModel
+                                    .listAppointment![index].purchaseTime!,
+                              ),
+                            )
+                          : EmptyList(msg: 'no appoitment'.tr)),
+                ],
               ),
             ),
-          )),
+          ),
+        ),
+        controller: controller,
+      ),
     ));
   }
 }

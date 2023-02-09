@@ -76,4 +76,8 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
     dashboardModel.balance = DoctorService.doctor!.doctorBalance;
     change(dashboardModel, status: RxStatus.success());
   }
+
+  Future<void> toggle(bool isOnline) async {
+    await DoctorService().updateDoctorStatus(isOnline);
+  }
 }

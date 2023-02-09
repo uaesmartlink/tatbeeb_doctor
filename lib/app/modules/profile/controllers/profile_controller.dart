@@ -62,8 +62,8 @@ class ProfileController extends GetxController {
     );
   }
 
-  void test() async {
-    // //await ChatService().getListChat();
-    // NotificationService().testNotification();
-  }
+/*  void test() async {
+    await ChatService().getListChat();
+    NotificationService().testNotification();
+  }*/
 }
