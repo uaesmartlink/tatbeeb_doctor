@@ -34,10 +34,31 @@ class DoctorService {
       };
 
       if (isUpdate) {
+        Map<String, dynamic> doctorsData = {
+          'doctorPhone': doctorPhone,
+          'doctorHospital': hospital,
+          'doctorBiography': shortBiography,
+          'doctorPicture': pictureUrl,
+        };
         doctorsData['updatedAt'] = FieldValue.serverTimestamp();
         await doctors.doc(DoctorService.doctor!.doctorId).update(doctorsData);
         await getDoctor(forceGet: true);
       } else {
+        Map<String, dynamic> doctorsData = {
+          'doctorName': doctorName,
+          'doctorPhone': doctorPhone,
+          'doctorHospital': hospital,
+          'doctorBiography': shortBiography,
+          'doctorPicture': pictureUrl,
+          'certificateUrl':certificateUrl,
+          'doctorCategory': {
+            'categoryId': doctorCategory.categoryId,
+            'categoryName': doctorCategory.categoryName
+          },
+          'doctorBasePrice': 10,
+          'accountStatus': 'nonactive',
+          'isOnline': false,
+        };
         doctorsData['createdAt'] = FieldValue.serverTimestamp();
         doctorsData['updatedAt'] = FieldValue.serverTimestamp();
         var doctor = await doctors.add(doctorsData);
@@ -92,6 +113,14 @@ class DoctorService {
           .doc(doctor!.doctorId)
           .update({'isOnline': isOnline});
       doctor!.isOnline = isOnline;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  Future<bool?> getIsOnline() async {
+    try {
+      return doctor!.isOnline;
     } catch (e) {
       return Future.error(e.toString());
     }

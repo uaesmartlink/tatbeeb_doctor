@@ -18,11 +18,13 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
   final profilePic = ''.obs;
   DashboardModel dashboardModel = DashboardModel();
   var lock = Lock();
+  bool light = false;
 
   @override
   void onReady() async {
     super.onReady();
     var doctor = await DoctorService().getDoctor();
+    light = (await DoctorService().getIsOnline())!;
 
     if (doctor == null) {
       if (await UserService().checkIfUserExist() == false) {
@@ -31,8 +33,11 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
         return Get.offNamed('/add-doctor-detail');
       }
     }
+
     username.value = UserService().currentUser!.displayName!;
-    UserService().getPhotoUrl().then((urlPicture) => profilePic.value = urlPicture);
+    UserService()
+        .getPhotoUrl()
+        .then((urlPicture) => profilePic.value = urlPicture);
 
     await getListAppointment();
     //await getListReview(doctor);
@@ -41,6 +46,7 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
 
   @override
   void onClose() {}
+
   void increment() => count.value++;
 
   //Check whether, user is already set his detail doctor
@@ -49,6 +55,7 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
     if (check == null || !check) return false;
     return true;
   }
+
   void toProfile() {
     Get.find<DashboardController>().selectedIndex = 3;
   }
