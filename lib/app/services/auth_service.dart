@@ -8,6 +8,7 @@ import 'firebase_service.dart';
 
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future login(String username, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(
@@ -86,6 +87,7 @@ class AuthService {
   }
 
   Future logout() async {
+    await DoctorService().makeOffline();
     _auth.signOut();
     DoctorService.doctor = null;
   }

@@ -118,6 +118,18 @@ class DoctorService {
     }
   }
 
+  Future makeOffline() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('Doctors')
+          .doc(doctor!.doctorId)
+          .update({'isOnline': false});
+      doctor!.isOnline = false;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
   Future<bool?> getIsOnline() async {
     try {
       return doctor!.isOnline;
