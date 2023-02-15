@@ -35,10 +35,10 @@ class HomeController extends GetxController with StateMixin<DashboardModel> {
     }
 
     username.value = UserService().currentUser!.displayName!;
-    UserService()
+    await UserService()
         .getPhotoUrl()
         .then((urlPicture) => profilePic.value = urlPicture);
-
+    print("profile Picture : ${profilePic.value}");
     await getListAppointment();
     //await getListReview(doctor);
     getBalance();

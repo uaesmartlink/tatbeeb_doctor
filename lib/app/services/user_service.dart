@@ -22,6 +22,7 @@ class UserService {
     String? profilePic;
     try {
       profilePic = currentUser?.photoURL ?? "";
+      print("PP:  ${profilePic}");
     } catch (e) {
       profilePic = '';
     }
